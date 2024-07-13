@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mono-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/Argo-Demo/repo'
+    path: ./declarative/manifests/single-app
+    targetRevision: HEAD
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: mono-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
