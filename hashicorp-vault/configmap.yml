@@ -1,0 +1,8 @@
+# To be used for anything non-sensitive
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vault-config
+  namespace: hashicorp-vault
+data:
+  vault_addr: "https://vault.example.com"

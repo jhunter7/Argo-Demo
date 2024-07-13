@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: github-actions-runner
+  namespace: github-actions
+  labels:
+    app: github-actions-runner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: github-actions-runner
+  template:
+    metadata:
+      labels:
+        app: github-actions-runner
+    spec:
+      containers:
+        - name: github-actions-runner
+          image: <ECR_REGISTRY>/github-actions-runner:latest # This line should be updated
+          env:
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: github-actions-secrets
+                  key: github_token
+            - name: RUNNER_NAME
+              value: my-runner
+            - name: RUNNER_WORKDIR
+              value: /tmp/github-runner
+            - name: RUNNER_GROUP
+              value: my-group
+            - name: LABELS
+              value: linux,self-hosted
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+          volumeMounts:
+            - name: runner-workdir
+              mountPath: /tmp/github-runner
+      volumes:
+        - name: runner-workdir
+          emptyDir: {}
+
+          

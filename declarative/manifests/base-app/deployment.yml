@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: base-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: base-app
+  template:
+    metadata:
+      labels:
+        app: base-app
+    spec:
+      containers:
+        - name: base-app
+          image: python:3.9
+          ports:
+            - containerPort: 80
+          env:
+            - name: ENVIRONMENT
+              value: production
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "0.5"
+              memory: "256Mi"

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: datadog-argo-config
+  namespace: health-checks
+data:
+  datadog.yaml: |
+    api_key: DATADOG_API_KEY
+    logs_enabled: true
+    logs_config:
+      container_collect_all: true
+    confd:
+      kubernetes.yaml: |
+        init_config:
+        instances:
+          - kube_state_url: http://localhost:8080/metrics

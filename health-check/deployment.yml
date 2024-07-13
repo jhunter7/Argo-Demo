@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: datadog-agent
+  namespace: health-checks
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: datadog-agent
+  template:
+    metadata:
+      labels:
+        app: datadog-agent
+    spec:
+      containers:
+        - name: datadog-agent
+          image: datadog/agent:latest
+          env:
+            - name: DD_API_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: datadog-config
+                  key: api_key
+            - name: KUBERNETES
+              value: "true"
+            - name: DD_LOGS_ENABLED
+              value: "true"
+            - name: DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL
+              value: "true"
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+          volumeMounts:
+            - name: datadog-config-volume
+              mountPath: /etc/datadog-agent/datadog.yaml
+              subPath: datadog.yaml
+            - name: proc
+              mountPath: /host/proc
+              readOnly: true
+            - name: cgroups
+              mountPath: /host/sys/fs/cgroup
+              readOnly: true
+      volumes:
+        - name: datadog-config-volume
+          configMap:
+            name: datadog-config
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: cgroups
+          hostPath:
+            path: /sys/fs/cgroup
+
+

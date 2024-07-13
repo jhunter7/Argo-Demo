@@ -1,0 +1,27 @@
+replicaCount: 1
+
+image:
+  repository: "datadog/agent"
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+datadog:
+  apiKey: "DATADOG_API_KEY"
+  logsEnabled: true
+  logsConfig:
+    containerCollectAll: true
+
+service:
+  type: ClusterIP
+  ports:
+    apm:
+      port: 8126
+      targetPort: 8126
+    dogstatsd:
+      port: 8125
+      targetPort: 8125
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}

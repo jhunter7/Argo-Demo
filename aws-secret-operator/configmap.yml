@@ -1,0 +1,8 @@
+# Use this if you'd like to use a configmap to store the AWS region info
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-secret-config
+  namespace: aws-secret-operator
+data:
+  region: us-west-2

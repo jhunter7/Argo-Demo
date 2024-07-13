@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fullname" . }}-deployment
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "commonLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "serviceAccountName" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          env:
+            - name: DD_API_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "fullname" . }}-configmap
+                  key: api_key
+            - name: KUBERNETES
+              value: "true"
+            - name: DD_LOGS_ENABLED
+              value: {{ .Values.datadog.logsEnabled | quote }}
+            - name: DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL
+              value: {{ .Values.datadog.logsConfig.containerCollectAll | quote }}
+          volumeMounts:
+            - name: datadog-config-volume
+              mountPath: /etc/datadog-agent/datadog.yaml
+              subPath: datadog.yaml
+            - name: proc
+              mountPath: /host/proc
+              readOnly: true
+            - name: cgroups
+              mountPath: /host/sys/fs/cgroup
+              readOnly: true
+      volumes:
+        - name: datadog-config-volume
+          configMap:
+            name: {{ include "fullname" . }}-configmap
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: cgroups
+          hostPath:
+            path: /sys/fs/cgroup

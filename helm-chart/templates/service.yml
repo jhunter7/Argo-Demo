@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "fullname" . }}-service
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "selectorLabels" . | nindent 4 }}
+  ports:
+    - name: apm
+      protocol: TCP
+      port: 8126
+      targetPort: 8126
+    - name: dogstatsd
+      protocol: TCP
+      port: 8125
+      targetPort: 8125
+  type: ClusterIP

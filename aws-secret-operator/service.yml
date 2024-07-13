@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aws-secret-operator-service
+  namespace: aws-secret-operator
+  labels:
+    app: aws-secret-operator
+spec:
+  selector:
+    app: aws-secret-operator
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP

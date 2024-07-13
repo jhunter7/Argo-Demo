@@ -396,3 +396,9 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+declarative/geocentric-app.yml
+declarative/mono-app.yml
+declarative/mono-app.yml
+
+jenkins-demo@tmp

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "fullname" . }}-configmap
+  labels:
+    {{- include "commonLabels" . | nindent 4 }}
+data:
+  config.yaml: |
+    api_key: {{ .Values.datadog.apiKey | quote }}
+    logs_enabled: {{ .Values.datadog.logsEnabled | quote }}
+    logs_config:
+      container_collect_all: {{ .Values.datadog.logsConfig.containerCollectAll | quote }}
+    confd:
+      kubernetes.yaml: |
+        init_config:
+        instances:
+          - kube_state_url: http://localhost:8080/metrics
