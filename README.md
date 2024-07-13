@@ -1,0 +1,2 @@
+# Argo
+Demo ArgoCD Repo
