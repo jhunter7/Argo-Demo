@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: ArgoCD Automated Deployment
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest #Or custom runner
 
     steps:
       - name: Checkout repository
